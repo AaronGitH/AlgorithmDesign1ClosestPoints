@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Scanner;
  */
 public class ClosestPoints {
 
-    static ArrayList<Point> points = new ArrayList();
+    static List<Point> points = new ArrayList();
 
     public static void main(String[] args) throws FileNotFoundException {
         File file = new File("a280-tsp.txt");
@@ -33,18 +34,27 @@ public class ClosestPoints {
     }
     
     // CLOSEST-PAIR (p1, p2, …, pn)
-    public static Pair closestPair(ArrayList<Point> list){
-    // Compute separation line L such that half the points
-    // are on each side of the line.
-    // δ1 ← CLOSEST-PAIR (points in left half).
-    // δ2 ← CLOSEST-PAIR (points in right half).
-    // δ ← min { δ1 , δ2 }.
-    // Delete all points further than δ from line L.
-    // Sort remaining points by y-coordinate.
-    // Scan points in y-order and compare distance between
-    // each point and next 11 neighbors. If any of these
-    // distances is less than δ, update δ.
-    // RETURN δ.
+    public static Pair closestPair(List<Point> list){
+        // Compute separation line L such that half the points are on each side of the line.
+        Double line = list.get((list.size()/2) + (list.size() % 2)).x; //we assume L = rightmost x in Q
+        // δ1 ← CLOSEST-PAIR (points in left half).
+        Pair delta1 = closestPair(list.subList(0, (list.size()/2)));
+        // δ2 ← CLOSEST-PAIR (points in right half).
+        Pair delta2 = closestPair(list.subList((list.size()/2)+1, list.size()));
+        // δ ← min { δ1 , δ2 }.
+        Pair delta = delta1.distance() < delta2.distance() ? delta1 : delta2;
+        // Delete all points further than δ from line L.
+        for ( int i = 0; i<list.size(); i++) {
+            if(list.get(i).compareTo(new Point(line, list.get(i).y)) > delta.distance()) {
+                list.remove(i);
+            }
+        
+        }
+        // Sort remaining points by y-coordinate.
+        // Scan points in y-order and compare distance between
+        // each point and next 11 neighbors. If any of these
+        // distances is less than δ, update δ.
+        // RETURN δ.
         return new Pair(list.get(0), list.get(0));
     }
 
@@ -57,6 +67,12 @@ public class ClosestPoints {
 
         public Point(int id, double x, double y) {
             this.id = id;
+            this.x = x;
+            this.y = y;
+        }
+        
+        public Point(double x, double y) {
+            this.id = -1;
             this.x = x;
             this.y = y;
         }
