@@ -1,8 +1,8 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
-
 
 /**
  * @author Rene Anda Nielsen <rann@itu.dk>
@@ -11,14 +11,34 @@ import java.util.Scanner;
  */
 public class ClosestPoints {
 
-    public static void main(String[] args) throws FileNotFoundException {
-        File file = new File(""); 
-        Scanner sc = new Scanner(file);
-        //sc = new Scanner(System.in);
-        while (sc.hasNextLine()) {
-            String line = sc.nextLine().trim();
-            System.out.println(line);
+    static ArrayList<Point> points = new ArrayList();
+
+    public static void main(String[] args) throws FileNotFoundException{
+        File file = new File("d198-tsp.txt");
+        Scanner sc = new Scanner(file); // (System.in);
+        int id = 1;
+        while (sc.hasNextLine()){
+            String[] fields = sc.nextLine().trim().replaceAll("\\s+"," ").split(" ");
+            if (fields[0].compareTo(id + "") == 0) {
+                double x = Double.parseDouble(fields[1]);
+                double y = Double.parseDouble(fields[2]);
+                Point p = new Point(id, x, y);
+                points.add(p);
+                id++;
+            }
         }
     }
-    
+
+    private static class Point{
+
+        final int id;
+        final double x, y;
+
+        public Point(int id, double x, double y) {
+            this.id = id;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
 }
