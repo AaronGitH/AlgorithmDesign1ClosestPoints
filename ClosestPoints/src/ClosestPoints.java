@@ -28,6 +28,17 @@ public class ClosestPoints {
             }
         }
     }
+    
+    private static class Pair{
+        
+        private final ArrayList<Point> left;
+        private final ArrayList<Point> right;
+        
+        public Pair(ArrayList<Point> left, ArrayList<Point> right){
+            this.left = left;
+            this.right = right;
+        }
+    }
 
     private static class Point{
 
