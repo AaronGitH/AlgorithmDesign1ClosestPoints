@@ -31,6 +31,17 @@ public class ClosestPoints {
         Collections.sort(points);
         closestPair(points);
     }
+    
+    private static class Pair{
+        
+        private final ArrayList<Point> left;
+        private final ArrayList<Point> right;
+        
+        public Pair(ArrayList<Point> left, ArrayList<Point> right){
+            this.left = left;
+            this.right = right;
+        }
+    }
 
     public static void closestPair(ArrayList<Point> list) {
         
