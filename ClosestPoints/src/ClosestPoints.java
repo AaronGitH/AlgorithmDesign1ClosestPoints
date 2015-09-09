@@ -29,17 +29,22 @@ public class ClosestPoints {
         }
     }
     
-    private static class Pair{
-        
-        private final ArrayList<Point> left;
-        private final ArrayList<Point> right;
-        
-        public Pair(ArrayList<Point> left, ArrayList<Point> right){
-            this.left = left;
-            this.right = right;
-        }
+    // CLOSEST-PAIR (p1, p2, …, pn)
+    public static void closestPair(){
+    // Compute separation line L such that half the points
+    // are on each side of the line.
+    // δ1 ← CLOSEST-PAIR (points in left half).
+    // δ2 ← CLOSEST-PAIR (points in right half).
+    // δ ← min { δ1 , δ2 }.
+    // Delete all points further than δ from line L.
+    // Sort remaining points by y-coordinate.
+    // Scan points in y-order and compare distance between
+    // each point and next 11 neighbors. If any of these
+    // distances is less than δ, update δ.
+    // RETURN δ.
     }
-
+    
+    
     private static class Point{
 
         final int id;
