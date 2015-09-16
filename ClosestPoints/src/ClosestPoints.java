@@ -18,8 +18,9 @@ public class ClosestPoints {
     static boolean sortByY = false;
 
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("usa13509-tsp.txt");
-        Scanner sc = new Scanner(file); // (System.in);
+        //File file = new File("usa13509-tsp.txt");
+        //Scanner sc = new Scanner(file); // (System.in);
+        Scanner sc = new Scanner(System.in);
         int id = 1;
         while (sc.hasNextLine()) {
             String[] fields = sc.nextLine().trim().replaceAll("\\s+", " ").split(" ");
