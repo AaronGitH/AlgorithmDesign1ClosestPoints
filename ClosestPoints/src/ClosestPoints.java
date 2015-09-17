@@ -14,17 +14,17 @@ import java.util.Scanner;
 public class ClosestPoints {
 
     static List<Point> pX = new ArrayList();
-    static List<Point> pY;
+    //static List<Point> pY;
     static boolean sortByY = false;
 
     public static void main(String[] args) throws FileNotFoundException {
-        //File file = new File("usa13509-tsp.txt");
-        //Scanner sc = new Scanner(file); // (System.in);
-        Scanner sc = new Scanner(System.in);
+        File file = new File("linhp318-tsp.txt");
+        Scanner sc = new Scanner(file);
+        // Scanner sc = new Scanner(System.in);
         int id = 1;
         while (sc.hasNextLine()) {
             String[] fields = sc.nextLine().trim().replaceAll("\\s+", " ").split(" ");
-            if (fields[0].compareTo(id + "") == 0) {
+            if (fields[0].compareTo(id + "") == 0 && fields.length==3) {
                 double x = Double.parseDouble(fields[1]);
                 double y = Double.parseDouble(fields[2]);
                 Point p = new Point(id, x, y);
@@ -34,19 +34,19 @@ public class ClosestPoints {
         }
 
         // copy pX to pY
-        pY = new ArrayList<>(pX);
+        // pY = new ArrayList<>(pX);
         // sort pX by x
         Collections.sort(pX);
         // sort pY by y
         sortByY = true;
-        Collections.sort(pY);
+        // Collections.sort(pY);
 
-        Pair closestPair = closestPairRec(pX, pY);
+        Pair closestPair = closestPairRec(pX);
         System.out.println("Points: " + closestPair.p1.id + " & " + closestPair.p2.id + "\nDistance: " + closestPair.distance());
     }
 
     // CLOSEST-PAIR (p1, p2, …, pn)
-    private static Pair closestPairRec(List<Point> pointsSortedByX, List<Point> pointsSortedByY) {
+    private static Pair closestPairRec(List<Point> pointsSortedByX) {
 
         if (pointsSortedByX.size() <= 3) {
             return bruteForce(pointsSortedByX);
@@ -58,32 +58,35 @@ public class ClosestPoints {
         List<Point> qX = new ArrayList<>(pointsSortedByX.subList(0, lineL));
         List<Point> rX = new ArrayList<>(pointsSortedByX.subList(lineL + 1, pointsSortedByX.size()));
 
-        // create auxiliary list
-        List<Point> aux = new ArrayList<>(qX);
-        Collections.sort(aux);
+        // create temporary list containing first the points in Q then the points in R
+        // List<Point> temp = new ArrayList<>(qX);
+        // sorts by Y
+        // Collections.sort(temp);
         // find closest pair in Q
-        Pair closestPair = closestPairRec(qX, aux);
+        Pair closestPair = closestPairRec(qX);
 
-        aux.clear();
-        aux.addAll(rX);
-        Collections.sort(aux);
+        //temp.clear();
+        //temp.addAll(rX);
+        // sorts by Y
+        //Collections.sort(temp);
         // find closest pair in R
-        Pair closestPairR = closestPairRec(rX, aux);
+        Pair closestPairR = closestPairRec(rX);
 
-        // if distance in right half is smaller = update
+        // if distance in R is smaller than the distance in Q then update closestPair
         if (closestPairR.distance() < closestPair.distance()) {
             closestPair = closestPairR;
         }
 
-        // construct sY
+        // construct sY = points in band
         List<Point> sY = new ArrayList<>();
         double delta = closestPair.distance();
-        for (Point point : pointsSortedByY) {
+        for (Point point : pointsSortedByX) {
             if (Math.abs(rX.get(0).x - point.x) < delta) {
                 sY.add(point);
             }
         }
 
+        Collections.sort(sY);
         for (int i = 0; i < sY.size(); i++) {
             Point point1 = sY.get(i);
             // compare with 11 neighbours
