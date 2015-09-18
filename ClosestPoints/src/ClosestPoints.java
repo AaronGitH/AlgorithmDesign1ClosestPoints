@@ -16,15 +16,21 @@ public class ClosestPoints {
     static List<Point> pX = new ArrayList();
     static List<Point> pY;
     static boolean sortByY = false;
+    static boolean readPoints = false;
 
     public static void main(String[] args) throws FileNotFoundException {
-        //File file = new File("linhp318-tsp.txt");
-        //Scanner sc = new Scanner(file);
+//        File file = new File("/home/anda/ITU/E2015-SAD1/Hand-in 3/files/att532-tsp.txt");
+//        Scanner sc = new Scanner(file);
         Scanner sc = new Scanner(System.in);
         int id = 1;
         while (sc.hasNextLine()) {
             String[] fields = sc.nextLine().trim().replaceAll("\\s+", " ").split(" ");
-            if (fields[0].compareTo(id + "") == 0 && fields.length==3) {
+
+            if (fields[0].equalsIgnoreCase("NODE_COORD_SECTION")) {
+                readPoints = true;
+            }
+            
+            if (readPoints && fields.length==3) {
                 double x = Double.parseDouble(fields[1]);
                 double y = Double.parseDouble(fields[2]);
                 Point p = new Point(id, x, y);
@@ -32,7 +38,12 @@ public class ClosestPoints {
                 id++;
             }
         }
-
+        
+        // debug parsing
+//        for (int i =0; i< pX.size();i++) {
+//            System.out.println(pX.get(i).id);
+//        }
+        
         // copy pX to pY
         pY = new ArrayList<>(pX);
         // sort pX by x
@@ -42,7 +53,8 @@ public class ClosestPoints {
         Collections.sort(pY);
 
         Pair closestPair = closestPairRec(pX, pY);
-        System.out.println("Points: " + closestPair.p1.id + " & " + closestPair.p2.id + "\nDistance: " + closestPair.distance());
+        //System.out.println("Points: " + closestPair.p1.id + " & " + closestPair.p2.id + "\nDistance: " + closestPair.distance());
+        System.out.println(closestPair.distance());
     }
 
     // CLOSEST-PAIR (p1, p2, …, pn)
@@ -81,7 +93,7 @@ public class ClosestPoints {
         List<Point> sY = new ArrayList<>();
         double delta = closestPair.distance();
         for (Point point : pointsSortedByY) {
-            if (Math.abs(rX.get(0).x - point.x) < delta) {
+            if (Math.abs(qX.get(qX.size()-1).x - point.x) < delta) {
                 sY.add(point);
             }
         }
