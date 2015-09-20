@@ -1,6 +1,4 @@
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,15 +12,12 @@ import java.util.Scanner;
 public class ClosestPoints {
 
     static List<Point> pX = new ArrayList();
-    static List<Point> pY;
+    static List<Point> pY = new ArrayList();
     static boolean sortByY = false;
     static boolean readPoints = false;
-    static double delta = 0;
 
-    public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("/home/anda/ITU/E2015-SAD1/Hand-in 3/files/d2103-tsp.txt");
-        Scanner sc = new Scanner(file);
-        //Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         while (sc.hasNextLine()) {
             String[] fields = sc.nextLine().trim().replaceAll("\\s+", " ").split(" ");
 
@@ -39,7 +34,7 @@ public class ClosestPoints {
         sc.close();
 
         // copy pX to pY
-        pY = new ArrayList<>(pX);
+        pY.addAll(pX);
         // sort pX by x
         Collections.sort(pX);
         // sort pY by y
@@ -47,7 +42,7 @@ public class ClosestPoints {
         Collections.sort(pY);
 
         Pair closestPair = closestPairRec(pX, pY);
-        System.out.println("\n"+closestPair.distance());
+        System.out.println(closestPair.distance());
 
     }
 
@@ -93,7 +88,7 @@ public class ClosestPoints {
         for (int i = 0; i < sY.size(); i++) {
             Point point1 = sY.get(i);
             // compare with 11 neighbours
-            for (int j = i + 1; j <= i + 11; j++) {
+            for (int j = i + 1; j <= i + 15; j++) {
                 if (j == sY.size()) {
                     break;
                 }
