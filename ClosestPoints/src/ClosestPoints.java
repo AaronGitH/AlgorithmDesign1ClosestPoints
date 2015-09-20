@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class ClosestPoints {
 
     static List<Point> pX = new ArrayList();
-    //static List<Point> pY;
+    static List<Point> pY;
     static boolean sortByY = false;
     static boolean readPoints = false;
     static double delta = 0;
@@ -36,21 +36,22 @@ public class ClosestPoints {
                 pX.add(new Point(x, y));
             }
         }
+        sc.close();
 
         // copy pX to pY
-        // pY = new ArrayList<>(pX);
+        pY = new ArrayList<>(pX);
         // sort pX by x
         Collections.sort(pX);
         // sort pY by y
-        //sortByY = true;
-        //Collections.sort(pY);
+        sortByY = true;
+        Collections.sort(pY);
 
-        Pair closestPair = closestPairRec(pX);
-        //System.out.println("Points: " + closestPair.p1.id + " & " + closestPair.p2.id + "\nDistance: " + closestPair.distance());
-        System.out.println(closestPair.distance());
+        Pair closestPair = closestPairRec(pX, pY);
+        System.out.println("\n"+closestPair.distance());
+
     }
 
-    private static Pair closestPairRec(List<Point> pointsSortedByX) {
+    private static Pair closestPairRec(List<Point> pointsSortedByX, List<Point> pointsSortedByY) {
 
         if (pointsSortedByX.size() <= 3) {
             return bruteForce(pointsSortedByX);
@@ -63,17 +64,17 @@ public class ClosestPoints {
         List<Point> rX = new ArrayList<>(pointsSortedByX.subList(lineL, pointsSortedByX.size()));
 
         // create temporary list containing first the points in Q then the points in R
-        //List<Point> qY = new ArrayList<>(qX);
+        List<Point> qY = new ArrayList<>(qX);
         // sorts by Y
-        // Collections.sort(qY);
+        Collections.sort(qY);
         // find closest pair in Q
-        Pair closestPair = closestPairRec(qX);
+        Pair closestPair = closestPairRec(qX, qY);
 
-        //List<Point> rY = new ArrayList<>(rX);
+        List<Point> rY = new ArrayList<>(rX);
         // sorts by Y
-        // Collections.sort(rY);
+        Collections.sort(rY);
         // find closest pair in R
-        Pair closestPairR = closestPairRec(rX);
+        Pair closestPairR = closestPairRec(rX, rY);
 
         // if distance in R is smaller than the distance in Q then update closestPair
         if (closestPairR.distance() < closestPair.distance()) {
@@ -83,14 +84,11 @@ public class ClosestPoints {
         // construct sY = points in band
         List<Point> sY = new ArrayList<>();
 
-        for (Point point : pointsSortedByX) {
-            if (Math.abs(qX.get(lineL - 1).x - point.x) < closestPair.distance()) {
+        for (Point point : pointsSortedByY) {
+            if (Math.abs(point.x - qX.get(lineL - 1).x) < closestPair.distance()) {
                 sY.add(point);
             }
         }
-
-        sortByY = true;
-        Collections.sort(sY);
 
         for (int i = 0; i < sY.size(); i++) {
             Point point1 = sY.get(i);
@@ -113,7 +111,6 @@ public class ClosestPoints {
     }
 
     private static Pair bruteForce(List<Point> points) {
-        //Pair minimumPair = new Pair(new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY), new Point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
         Pair minimumPair = new Pair(new Point(0, 0), new Point(0, Double.POSITIVE_INFINITY));
         for (int i = 0; i < points.size(); i++) {
             for (int j = 0; j < points.size(); j++) {
@@ -152,9 +149,9 @@ public class ClosestPoints {
         }
 
         // Euclidean distance 
-        public Double distance(Point p) {
+        public Double distance(Point other) {
             //Double distance = Math.sqrt((this.x - p.x) * (this.x - p.x) + (this.y - p.y) * (this.y - p.y));
-            Double distance = Math.hypot(this.x - p.x, this.y - p.y);
+            Double distance = Math.hypot(this.x - other.x, this.y - other.y);
             return distance;
         }
 
